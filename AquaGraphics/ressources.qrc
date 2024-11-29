@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/ressources">
+        <file>aboveWater.vert</file>
+        <file>aboveWater.frag</file>
+        <file>underWater.vert</file>
+        <file>underWater.frag</file>
+        <file>water.vert</file>
+        <file>water.frag</file>
+        <file>sphere.vert</file>
+        <file>sphere.frag</file>
+        <file>xneg.jpg</file>
+        <file>xpos.jpg</file>
+        <file>ypos.jpg</file>
+        <file>zneg.jpg</file>
+        <file>zpos.jpg</file>
+        <file>tiles.jpg</file>
+    </qresource>
+</RCC>
