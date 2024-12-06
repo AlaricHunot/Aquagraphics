@@ -20,20 +20,15 @@ void main() {
     vec2 coord = fragPosition.xz * 0.5 + 0.5;
     vec4 waterInfo = texture(water, coord);
 
-    // Normale de l'eau
     vec3 normal = vec3(waterInfo.b, sqrt(1.0 - dot(waterInfo.ba, waterInfo.ba)), waterInfo.a);
     vec3 eyeDir = normalize(fragPosition);
 
-    // Réflexion et réfraction
     vec3 reflectedDir = reflect(eyeDir, normal);
     vec3 refractedDir = refract(eyeDir, normal, IOR_AIR / IOR_WATER);
 
-    // Couleurs résultantes
     vec3 reflectedColor = texture(sky, reflectedDir).rgb * abovewaterColor;
     vec3 refractedColor = texture(sky, refractedDir).rgb * abovewaterColor;
 
-    // Fresnel
     float fresnel = mix(0.25, 1.0, pow(1.0 - dot(normal, -eyeDir), 3.0));
     fragColor = vec4(mix(refractedColor, reflectedColor, fresnel), 1.0);
 }
-

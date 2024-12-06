@@ -1,7 +1,7 @@
 #version 330 core
 
-layout(location = 0) in vec3 position; // Position des sommets
-out vec3 fragPosition;               // Position envoyée au fragment shader
+in vec3 position; // Position des sommets
+out vec3 fragPosition; // Position envoyée au fragment shader
 
 uniform sampler2D water; // Texture de l'eau
 uniform mat4 modelViewProjection;
@@ -13,4 +13,3 @@ void main() {
     fragPosition = vec3(position.x, waterInfo.r, position.z);
     gl_Position = modelViewProjection * vec4(fragPosition, 1.0);
 }
-

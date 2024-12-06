@@ -31,4 +31,3 @@ void main() {
     float fresnel = mix(0.5, 1.0, pow(1.0 - dot(normal, -eyeDir), 3.0));
     fragColor = vec4(mix(reflectedColor, refractedColor, fresnel), 1.0);
 }
-

@@ -1,6 +1,8 @@
 #include "meshloader.h"
-#include <vector>
 #include <cmath>
+#include <stdexcept>
+#include <vector>
+#include <limits>
 
 MeshLoader::MeshLoader() {
     initializeOpenGLFunctions();
@@ -9,6 +11,10 @@ MeshLoader::MeshLoader() {
 MeshLoader::~MeshLoader() {}
 
 QOpenGLVertexArrayObject* MeshLoader::loadPlane(int resolution) {
+    if (resolution <= 0) {
+        throw std::runtime_error("Resolution must be positive");
+    }
+
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
 
@@ -41,6 +47,10 @@ QOpenGLVertexArrayObject* MeshLoader::loadPlane(int resolution) {
 }
 
 QOpenGLVertexArrayObject* MeshLoader::loadSphere(int stacks, int slices) {
+    if (stacks <= 0 || slices <= 0) {
+        throw std::runtime_error("Stacks and slices must be positive");
+    }
+
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
 
@@ -77,11 +87,15 @@ QOpenGLVertexArrayObject* MeshLoader::loadSphere(int stacks, int slices) {
     return createVAO(vertices, indices);
 }
 
-QOpenGLBuffer* MeshLoader::createBuffer(const std::vector<float>& data, QOpenGLBuffer::Type type) {
+QOpenGLBuffer* MeshLoader::createBuffer(const void* data, int size, QOpenGLBuffer::Type type) {
+    if (size <= 0 || size > std::numeric_limits<int>::max()) {
+        throw std::runtime_error("Invalid buffer size");
+    }
+
     QOpenGLBuffer* buffer = new QOpenGLBuffer(type);
     buffer->create();
     buffer->bind();
-    buffer->allocate(data.data(), static_cast<int>(data.size() * sizeof(float)));
+    buffer->allocate(data, size);
     return buffer;
 }
 
@@ -90,11 +104,20 @@ QOpenGLVertexArrayObject* MeshLoader::createVAO(const std::vector<float>& vertic
     vao->create();
     vao->bind();
 
-    QOpenGLBuffer* vertexBuffer = createBuffer(vertices, QOpenGLBuffer::VertexBuffer);
-    QOpenGLBuffer* indexBuffer = createBuffer(indices, QOpenGLBuffer::IndexBuffer);
+    // Vertex Buffer
+    QOpenGLBuffer* vertexBuffer = createBuffer(vertices.data(), static_cast<int>(vertices.size() * sizeof(float)), QOpenGLBuffer::VertexBuffer);
+    if (!vertexBuffer->isCreated()) {
+        throw std::runtime_error("Failed to create vertex buffer");
+    }
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
     glEnableVertexAttribArray(0);
+
+    // Index Buffer
+    QOpenGLBuffer* indexBuffer = createBuffer(indices.data(), static_cast<int>(indices.size() * sizeof(unsigned int)), QOpenGLBuffer::IndexBuffer);
+    if (!indexBuffer->isCreated()) {
+        throw std::runtime_error("Failed to create index buffer");
+    }
 
     vao->release();
     vertexBuffer->release();

@@ -1,12 +1,8 @@
-QT       += core gui
+QT       += core gui opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++11
-
-# You can make your code fail to compile if it uses deprecated APIs.
-# In order to do so, uncomment the following line.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
     cubemap.cpp \
@@ -15,6 +11,7 @@ SOURCES += \
     meshloader.cpp \
     renderer.cpp \
     shaderloader.cpp \
+    simulationwidget.cpp \
     water.cpp
 
 HEADERS += \
@@ -23,15 +20,29 @@ HEADERS += \
     meshloader.h \
     renderer.h \
     shaderloader.h \
+    simulationwidget.h \
     water.h
 
 FORMS += \
     mainwindow.ui
 
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
-
 RESOURCES += \
     ressources.qrc
+
+# Compilation avec gestion des exceptions
+QMAKE_CXXFLAGS += -std=c++11 -fexceptions
+QMAKE_LFLAGS += -std=c++11 -fexceptions
+
+# Forcer l'inclusion de certaines bibliothèques
+LIBS += -lstdc++fs -lGL -lGLU -lpthread -ldl
+
+# Drapeaux pour le débogage et les warnings
+QMAKE_CXXFLAGS += -Wall -Wextra -Wpedantic
+
+# Activation de l'optimisation et de la gestion des threads
+CONFIG += thread release
+
+# Nettoyage automatique des fichiers temporaires
+clean.target = clean-all
+clean.commands = rm -rf *.o *~ build-*
+QMAKE_EXTRA_TARGETS += clean

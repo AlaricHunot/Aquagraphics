@@ -26,4 +26,3 @@ vec3 getSphereColor(vec3 point) {
 void main() {
     fragColor = vec4(getSphereColor(fragPosition), 1.0);
 }
-

@@ -1,20 +1,22 @@
 #ifndef CUBEMAP_H
 #define CUBEMAP_H
 
-#include <qopengl.h>
+#include <QOpenGLFunctions>
+#include <QString>
 #include <vector>
-#include <string>
 
-class Cubemap {
+class Cubemap : protected QOpenGLFunctions {
 public:
-    Cubemap(const std::vector<std::string>& faceTextures);
+    explicit Cubemap(const std::vector<QString>& faceTextures);
     ~Cubemap();
-    void bind(unsigned int unit = 0) const;
-    void unbind(unsigned int unit = 0) const;
+
+    void bind(unsigned int unit = 0) ;
+    void unbind(unsigned int unit = 0) ;
 
 private:
     GLuint textureID;
-    void loadCubemapFace(GLenum face, const std::string& imagePath);
+
+    void loadCubemapFace(GLenum face, const QString& imagePath);
 };
 
 #endif // CUBEMAP_H

@@ -14,5 +14,6 @@
         <file>zneg.jpg</file>
         <file>zpos.jpg</file>
         <file>tiles.jpg</file>
+        <file>yneg.jpg</file>
     </qresource>
 </RCC>
